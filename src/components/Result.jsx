@@ -52,10 +52,12 @@ const Result = ({ weapon, monster }) => {
     loadVersusIcon();
   }, [weapon, monster]);
 
-  if (!weapon || !monster) return null;
+  if (!weapon || !monster) return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', marginTop: '1.6rem', height  : '257.4px', width: '480px' }}></div>
+  )
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', marginTop: '1.6rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
         <h2>Quest</h2>
         <div className="result-container">

@@ -16,6 +16,7 @@ class QuestStore {
     Alatreon: true,
     'Kulve Taroth': true,
   };
+  questHistory = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -68,6 +69,20 @@ class QuestStore {
     this.persistState();
   }
 
+  addQuestToHistory(weapon, monster) {
+    // Add quest and keep last 20
+    this.questHistory = [{ weapon, monster }, ...this.questHistory].slice(0, 20);
+    this.persistState();
+  }
+
+  clearQuestHistory() {
+    // Limpar a quest atual e o histórico
+    this.weapon = '';
+    this.monster = '';
+    this.questHistory = [];
+    this.persistState();
+  }
+
   persistState() {
     // Save current state to localStorage
     const state = {
@@ -79,6 +94,7 @@ class QuestStore {
       includeEndgameMonsters: this.includeEndgameMonsters,
       includeSuperEndgameMonsters: this.includeSuperEndgameMonsters,
       includedSuperEndgameMonsters: this.includedSuperEndgameMonsters,
+      questHistory: this.questHistory,
     };
     localStorage.setItem('questState', JSON.stringify(state));
   }

@@ -1,11 +1,12 @@
 import { observer } from "mobx-react-lite";
 import questStore from './stores/questStore'; // Import the MobX store
 import Result from './components/Result';
+import QuestHistory from './components/QuestHistory';
 import './App.css';
 
 const allWeapons = {
   melee: ['Great Sword', 'Sword & Shield', 'Dual Blades','Long Sword', 'Hammer', 'Hunting Horn', 'Lance', 'Gunlance', 'Switch Axe', 'Charge Blade', 'Insect Glaive', 'Bow'],
-  bowguns: ['Light Bowgun', 'Heavy Bowgun']
+  bowguns: ['Light Bowgun', 'Heavy Bowgun'] // 3x less likely to be selected
 };
 
 // Define the arrays of monsters
@@ -17,10 +18,26 @@ const superEndgameMonsters = ['Fatalis', 'Alatreon','Kulve Taroth', "Velkhana", 
 const App = observer(() => {
 
   const handleRandomSelection = () => {
-    // Filter the weapon pool based on Bowgun checkbox
-    const weaponPool = questStore.includeBowguns ? [...allWeapons.melee, ...allWeapons.bowguns] : [...allWeapons.melee];
-    
-    // Generate random weapon and ensure it is not the same as the previous one
+    let weaponPool = [];
+
+    // Adicionar armas melee normalmente
+    weaponPool = [...allWeapons.melee];
+
+    // Se incluir Bowguns, adicioná-las 3 vezes menos
+    if (questStore.includeBowguns) {
+      weaponPool = [
+        ...weaponPool, 
+        ...allWeapons.bowguns // Adicionar as Bowguns uma vez
+      ];
+      // Para as armas melee, adicioná-las 3 vezes para dar mais probabilidade às melee
+      weaponPool = [
+        ...weaponPool,
+        ...allWeapons.melee,
+        ...allWeapons.melee,
+        ...allWeapons.melee
+      ];
+    }
+
     let newWeapon = weaponPool[Math.floor(Math.random() * weaponPool.length)];
     while (newWeapon === questStore.weapon) {
       newWeapon = weaponPool[Math.floor(Math.random() * weaponPool.length)];
@@ -60,86 +77,100 @@ const App = observer(() => {
     // Update the selections
     questStore.setWeapon(newWeapon);
     questStore.setMonster(newMonster);
+    questStore.addQuestToHistory(newWeapon, newMonster);
+
+  };
+
+  const handleClearHistory = () => {
+    questStore.clearQuestHistory(); // Limpar o histórico e a quest atual
   };
 
   return (
     <div className="App">
       <h1>MHW Random Quest Generator</h1>
+      <div className="app-container">
+        <div className="generator-container">
+          <h3>Options</h3>
+          <div className="options">
+            {/* Checkbox for including Bowguns */}
+            <label>
+              <input
+                type="checkbox"
+                checked={questStore.includeBowguns}
+                onChange={(e) => questStore.setIncludeBowguns(e.target.checked)}
+              />
+              Include Bowguns
+            </label>
 
-      <h3>Options</h3>
-      <div className="options">
-        {/* Checkbox for including Bowguns */}
-        <label>
-          <input
-            type="checkbox"
-            checked={questStore.includeBowguns}
-            onChange={(e) => questStore.setIncludeBowguns(e.target.checked)}
-          />
-          Include Bowguns
-        </label>
+            {/* Checkbox for including Normal Monsters */}
+            <label>
+              <input
+                type="checkbox"
+                checked={questStore.includeNormalMonsters}
+                onChange={(e) => questStore.setIncludeNormalMonsters(e.target.checked)}
+              />
+              Include Normal Monsters
+            </label>
 
-        {/* Checkbox for including Normal Monsters */}
-        <label>
-          <input
-            type="checkbox"
-            checked={questStore.includeNormalMonsters}
-            onChange={(e) => questStore.setIncludeNormalMonsters(e.target.checked)}
-          />
-          Include Normal Monsters
-        </label>
+            {/* Checkbox for including Mid Tier Monsters */}
+            <label>
+              <input
+                type="checkbox"
+                checked={questStore.includeMidTierMonsters}
+                onChange={(e) => questStore.setIncludeMidTierMonsters(e.target.checked)}
+              />
+              Include Mid-Tier Monsters
+            </label>
 
-        {/* Checkbox for including Mid Tier Monsters */}
-        <label>
-          <input
-            type="checkbox"
-            checked={questStore.includeMidTierMonsters}
-            onChange={(e) => questStore.setIncludeMidTierMonsters(e.target.checked)}
-          />
-          Include Mid-Tier Monsters
-        </label>
+            {/* Checkbox for including Endgame Monsters */}
+            <label>
+              <input
+                type="checkbox"
+                checked={questStore.includeEndgameMonsters}
+                onChange={(e) => questStore.setIncludeEndgameMonsters(e.target.checked)}
+              />
+              Include Endgame Monsters
+            </label>
 
-        {/* Checkbox for including Endgame Monsters */}
-        <label>
-          <input
-            type="checkbox"
-            checked={questStore.includeEndgameMonsters}
-            onChange={(e) => questStore.setIncludeEndgameMonsters(e.target.checked)}
-          />
-          Include Endgame Monsters
-        </label>
+            {/* Checkbox for including Super Endgame Monsters */}
+            {/* <label>
+              <input
+                type="checkbox"
+                checked={questStore.includeSuperEndgameMonsters}
+                onChange={(e) => questStore.setIncludeSuperEndgameMonsters(e.target.checked)}
+              />
+              Include Super Endgame Monsters (4x chance)
+            </label> */}
+          </div>
+          {/* Checkboxes for individual Super Endgame Monster Selection */}
+          <h3>Include Super Endgame Monsters:</h3>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {superEndgameMonsters.map((monster) => (
+            <label key={monster} className="include-monster">
+              <input
+                type="checkbox"
+                checked={questStore.includedSuperEndgameMonsters[monster]}
+                onChange={() => questStore.toggleSuperEndgameMonster(monster)}
+              />
+              {monster}
+            </label>
+          ))}
+          </div>
 
-        {/* Checkbox for including Super Endgame Monsters */}
-        {/* <label>
-          <input
-            type="checkbox"
-            checked={questStore.includeSuperEndgameMonsters}
-            onChange={(e) => questStore.setIncludeSuperEndgameMonsters(e.target.checked)}
-          />
-          Include Super Endgame Monsters (4x chance)
-        </label> */}
+
+
+          <Result weapon={questStore.weapon} monster={questStore.monster} />
+          <div className="button-container">
+            <button onClick={handleRandomSelection}  className="generate-button" >Generate Quest</button>
+            <button onClick={handleClearHistory} className="clear-button" >Clear History</button>
+          </div>
+        </div>
+
+        
+        <div className="quest-history-container">
+          <QuestHistory quests={questStore.questHistory} />
+        </div>
       </div>
-      {/* Checkboxes for individual Super Endgame Monster Selection */}
-      <h3>Include Super Endgame Monsters:</h3>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {superEndgameMonsters.map((monster) => (
-        <label key={monster} className="include-monster">
-          <input
-            type="checkbox"
-            checked={questStore.includedSuperEndgameMonsters[monster]}
-            onChange={() => questStore.toggleSuperEndgameMonster(monster)}
-          />
-          {monster}
-        </label>
-      ))}
-      </div>
-      <div className="button-container">
-        <button onClick={handleRandomSelection}>Generate Quest</button>
-      </div>
-      
-
-      <Result weapon={questStore.weapon} monster={questStore.monster} />
-      
-
     </div>
   );
 });
