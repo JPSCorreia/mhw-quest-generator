@@ -1,0 +1,43 @@
+
+#root {
+  /* max-width: 1280px; */
+  /* margin: 0 auto; */
+  /* padding: 2rem; */
+  /* text-align: center; */
+  color: white;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  height: 100%;
+}
+
+.App {
+  padding: 2rem;
+  max-width: 640px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+}
+
+.include-monster {
+  margin-right: 0.75rem;
+}
+
+#root {
+  background-image: url('/src/assets/images/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh; /* Faz com que a altura seja 100% da viewport */
+}
+
+.button-container {
+  margin-top: 1rem;
+}
