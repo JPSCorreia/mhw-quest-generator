@@ -4,7 +4,7 @@ import '../Result.css';
 
 const Result = ({ weapon, monster }) => {
   const [weaponImageSrc, setWeaponImageSrc] = useState(null);
-  const [monsterImageSrc, setMonsterImageSrc] = useState(null);
+  const [monsterImages, setMonsterImages] = useState({});
   const [versusImageSrc, setVersusImageSrc] = useState(null);
 
   useEffect(() => {
@@ -23,12 +23,17 @@ const Result = ({ weapon, monster }) => {
     // Carregar a imagem do monstro dinamicamente
     const loadMonsterIcon = async () => {
       try {
-        if (monster) {
+
+        const monsters = ['Anjanath', 'Banbaro', 'Barroth', 'Beotodus', 'Coral Pukei-Pukei','Diablos', 'Dodogama', 'Great Girros', 'Great Jagras', 'Jyuratodus','Kulu-Ya-Ku', 'Lavasioth', 'Legiana', 'Nightshade Paolumu', 'Odogaron', 'Paolumu', 'Pukei-Pukei', 'Radobaan', 'Rathalos', 'Rathian', 'Tobi-Kadachi', 'Tzitzi-Ya-Ku', 'Uragaan', 'Acidic Glavenus', 'Azure Rathalos', 'Black Diablos', 'Brachydios', 'Barioth', 'Ebony Odogaron', 'Fulgur Anjanath', 'Glavenus', 'Nargacuga', 'Pink Rathian', 'Seething Bazelgeuse', 'Shrieking Legiana', 'Tigrex', 'Viper Tobi-Kadachi', 'Yian Garuga', 'Zinogre', 'Rajang', 'Blackveil Vaal Hazak', 'Teostra', 'Lunastra', 'Kushala Daora', 'Furious Rajang', 'Gold Rathian', 'Silver Rathalos', "Shara Ishvalda", "Ruiner Nergigante", "Stygian Zinogre", "Brute Tigrex", 'Frostfang Barioth', 'Kirin', 'Savage Deviljho', 'Scarred Yian Garuga', 'Fatalis', 'Alatreon','Kulve Taroth', "Velkhana", "Namielle", "Raging Brachydios"]
+
+        const images = {};
+        for (const monster of monsters) {
           const image = await import(`../assets/icons/${monster}.webp`);
-          setMonsterImageSrc(image.default);
+          images[monster] = image.default;
         }
+        setMonsterImages(images);
       } catch (err) {
-        console.error('Erro ao carregar a imagem do monstro:', err);
+        console.error('Erro ao carregar as imagens dos monstros:', err);
       }
     };
 
@@ -81,9 +86,9 @@ const Result = ({ weapon, monster }) => {
           <div className="monster-container" style={{  width: '240px' }}>
             <h4>{monster}</h4>
             <div style={{ width: '120px', height: '120px' }}>
-              {monsterImageSrc && (
+              {monsterImages[monster] && (
                 <img 
-                  src={monsterImageSrc} 
+                  src={monsterImages[monster]} 
                   alt={monster} 
                   style={{ width: '120px', height: '120px' }} 
                 />

@@ -4,7 +4,7 @@ import Result from './components/Result';
 import './App.css';
 
 const allWeapons = {
-  melee: ['Great Sword', 'Sword and Shield', 'Dual Blades','Long Sword', 'Hammer', 'Hunting Horn', 'Lance', 'Gunlance', 'Switch Axe', 'Charge Blade', 'Insect Glaive', 'Bow'],
+  melee: ['Great Sword', 'Sword & Shield', 'Dual Blades','Long Sword', 'Hammer', 'Hunting Horn', 'Lance', 'Gunlance', 'Switch Axe', 'Charge Blade', 'Insect Glaive', 'Bow'],
   bowguns: ['Light Bowgun', 'Heavy Bowgun']
 };
 
