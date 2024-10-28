@@ -1,11 +1,16 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import '../Result.css';
 
 const Result = ({ weapon, monster }) => {
   const [weaponImageSrc, setWeaponImageSrc] = useState(null);
-  const [monsterImages, setMonsterImages] = useState({});
+  const [monsterImageSrc, setMonsterImageSrc] = useState(null);
   const [versusImageSrc, setVersusImageSrc] = useState(null);
+
+  // Importa todas as imagens dos monstros para que estejam prontas para carregamento dinâmico
+  const monsterImages = useMemo(() => {
+    return import.meta.glob('../assets/icons/*.webp', { eager: true });
+  }, []);
 
   useEffect(() => {
     // Carregar a imagem da arma dinamicamente
@@ -21,19 +26,13 @@ const Result = ({ weapon, monster }) => {
     };
 
     // Carregar a imagem do monstro dinamicamente
-    const loadMonsterIcon = async () => {
+    const loadMonsterIcon = () => {
       try {
-
-        const monsters = ['Anjanath', 'Banbaro', 'Barroth', 'Beotodus', 'Coral Pukei-Pukei','Diablos', 'Dodogama', 'Great Girros', 'Great Jagras', 'Jyuratodus','Kulu-Ya-Ku', 'Lavasioth', 'Legiana', 'Nightshade Paolumu', 'Odogaron', 'Paolumu', 'Pukei-Pukei', 'Radobaan', 'Rathalos', 'Rathian', 'Tobi-Kadachi', 'Tzitzi-Ya-Ku', 'Uragaan', 'Acidic Glavenus', 'Azure Rathalos', 'Black Diablos', 'Brachydios', 'Barioth', 'Ebony Odogaron', 'Fulgur Anjanath', 'Glavenus', 'Nargacuga', 'Pink Rathian', 'Seething Bazelgeuse', 'Shrieking Legiana', 'Tigrex', 'Viper Tobi-Kadachi', 'Yian Garuga', 'Zinogre', 'Rajang', 'Blackveil Vaal Hazak', 'Teostra', 'Lunastra', 'Kushala Daora', 'Furious Rajang', 'Gold Rathian', 'Silver Rathalos', "Shara Ishvalda", "Ruiner Nergigante", "Stygian Zinogre", "Brute Tigrex", 'Frostfang Barioth', 'Kirin', 'Savage Deviljho', 'Scarred Yian Garuga', 'Fatalis', 'Alatreon','Kulve Taroth', "Velkhana", "Namielle", "Raging Brachydios"]
-
-        const images = {};
-        for (const monster of monsters) {
-          const image = await import(`../assets/icons/${monster}.webp`);
-          images[monster] = image.default;
+        if (monster && monsterImages[`../assets/icons/${monster}.webp`]) {
+          setMonsterImageSrc(monsterImages[`../assets/icons/${monster}.webp`].default);
         }
-        setMonsterImages(images);
       } catch (err) {
-        console.error('Erro ao carregar as imagens dos monstros:', err);
+        console.error('Erro ao carregar a imagem do monstro:', err);
       }
     };
 
@@ -50,49 +49,48 @@ const Result = ({ weapon, monster }) => {
     loadWeaponIcon();
     loadMonsterIcon();
     loadVersusIcon();
-  }, [weapon, monster]);
+  }, [weapon, monster, monsterImages]);
 
   if (!weapon || !monster) return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', marginTop: '1.6rem', height  : '257.4px', width: '480px' }}></div>
+    <div className="result-container"></div>
   )
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'start', marginTop: '1.6rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
-        <h2>Quest</h2>
-        <div className="result-container">
+    <div className="result-container">
+        <h1>Quest</h1>
+        <div className="weapon-versus-monster-container">
 
-          <div className="weapon-container" style={{  width: '240px' }}>
+          <div className="weapon-container">
             <h4>{weapon}</h4>
-            <div style={{ width: '120px', height: '120px' }}>
+            <div>
               {weaponImageSrc && (
                 <img
                   src={weaponImageSrc}
                   alt={weapon}
-                  style={{ width: '110px', height: '110px' }}
+                  style={{ width: '160px', height: '160px' }}
                 />
               )}
             </div>
           </div>
 
-          <div style={{ height: '60px' }}>
+          <div className="versus-container" >
             {versusImageSrc && (
               <img 
                 src={versusImageSrc} 
                 alt="versus"
-                style={{ width: '100px', height: '100px', margin: '5px' }}
+                style={{ width: '120px', height: '120px'}}
               />
             )}
           </div>
 
-          <div className="monster-container" style={{  width: '240px' }}>
+          <div className="monster-container">
             <h4>{monster}</h4>
-            <div style={{ width: '120px', height: '120px' }}>
-              {monsterImages[monster] && (
+            <div>
+              {monsterImageSrc && (
                 <img 
-                  src={monsterImages[monster]} 
+                  src={monsterImageSrc}
                   alt={monster} 
-                  style={{ width: '120px', height: '120px' }} 
+                  style={{ width: '180px', height: '180px' }} 
                 />
               )}
             </div>
@@ -100,7 +98,6 @@ const Result = ({ weapon, monster }) => {
 
         </div>
       </div>
-    </div>
   );
 };
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 const QuestHistory = ({ quests }) => {
   return (
     <div className='quest-history'>
-      <h3 style={{textAlign: "end"}}>Last 20 Generated Quests</h3>
+      <h3 style={{textAlign: "end"}} className={quests.length === 20 ? 'red' : 'white'}>Last 20 Generated Quests</h3>
       <ul style={{listStyleType: "none", padding: 0}}>
         {quests.length === 0 ? (
           <p>No quests generated yet.</p>

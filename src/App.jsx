@@ -13,68 +13,77 @@ const allWeapons = {
 const normalMonsters = ['Anjanath', 'Banbaro', 'Barroth', 'Beotodus', 'Coral Pukei-Pukei','Diablos', 'Dodogama', 'Great Girros', 'Great Jagras', 'Jyuratodus','Kulu-Ya-Ku', 'Lavasioth', 'Legiana', 'Nightshade Paolumu', 'Odogaron', 'Paolumu', 'Pukei-Pukei', 'Radobaan', 'Rathalos', 'Rathian', 'Tobi-Kadachi', 'Tzitzi-Ya-Ku', 'Uragaan'];
 const midTierMonsters = ['Acidic Glavenus', 'Azure Rathalos', 'Black Diablos', 'Brachydios', 'Barioth', 'Ebony Odogaron', 'Fulgur Anjanath', 'Glavenus', 'Nargacuga', 'Pink Rathian', 'Seething Bazelgeuse', 'Shrieking Legiana', 'Tigrex', 'Viper Tobi-Kadachi', 'Yian Garuga', 'Zinogre'];
 const endgameMonsters = ['Rajang', 'Blackveil Vaal Hazak', 'Teostra', 'Lunastra', 'Kushala Daora', 'Furious Rajang', 'Gold Rathian', 'Silver Rathalos', "Shara Ishvalda", "Ruiner Nergigante", "Stygian Zinogre", "Brute Tigrex", 'Frostfang Barioth', 'Kirin', 'Savage Deviljho', 'Scarred Yian Garuga'];
-const superEndgameMonsters = ['Fatalis', 'Alatreon','Kulve Taroth', "Velkhana", "Namielle", "Raging Brachydios"]; // Super endgame monsters
 
 const App = observer(() => {
 
   const handleRandomSelection = () => {
-    let weaponPool = [];
 
-    // Adicionar armas melee normalmente
-    weaponPool = [...allWeapons.melee];
-
-    // Se incluir Bowguns, adicioná-las 3 vezes menos
-    if (questStore.includeBowguns) {
-      weaponPool = [
-        ...weaponPool, 
-        ...allWeapons.bowguns // Adicionar as Bowguns uma vez
-      ];
-      // Para as armas melee, adicioná-las 3 vezes para dar mais probabilidade às melee
-      weaponPool = [
-        ...weaponPool,
-        ...allWeapons.melee,
-        ...allWeapons.melee,
-        ...allWeapons.melee
-      ];
+    const selectedSuperEndgameMonsters = Object.keys(questStore.selectedSuperEndgameMonsters).filter((monster) => questStore.selectedSuperEndgameMonsters[monster]);
+    const selectedWeapons = Object.keys(questStore.selectedWeapons).filter((weapon) => questStore.selectedWeapons[weapon]);
+    
+    if (selectedWeapons.length === 0) {
+      alert("Please select at least one weapon to generate a quest.");
+      return;
+    }
+    if (
+      !questStore.includeNormalMonsters &&
+      !questStore.includeMidTierMonsters &&
+      !questStore.includeEndgameMonsters &&
+      selectedSuperEndgameMonsters.length === 0
+    ) {
+      alert("Please select at least one monster category to generate a quest.");
+      return;
     }
 
+    // Verificar se há apenas uma arma ou monstro e a opção de prevenir repetição está ativada
+    if (questStore.preventRepeatWeapon && selectedWeapons.length === 1) {
+      alert("Prevent Weapon Repeat is active, but only one weapon is selected. Please select more weapons or disable this option.");
+      return;
+    }
+    if (questStore.preventRepeatMonster && (!questStore.includeNormalMonsters && !questStore.includeMidTierMonsters && !questStore.includeEndgameMonsters && selectedSuperEndgameMonsters.length === 1)) {
+      alert("Prevent Monster Repeat is active, but only one monster is selected. Please select more monsters or disable this option.");
+      return;
+    }
+
+    // Construir a pool de armas com base na opção de frequência reduzida dos bowguns
+    let weaponPool = selectedWeapons.flatMap((weapon) => {
+      // Se `reduceBowgunFrequency` estiver ligado, adicionamos os bowguns apenas uma vez, e as outras armas 4 vezes
+      if (questStore.reduceBowgunFrequency && allWeapons.bowguns.includes(weapon)) {
+        return [weapon];  // Bowguns com chance reduzida
+      } else if (questStore.reduceBowgunFrequency && !allWeapons.bowguns.includes(weapon)) {
+        return [weapon, weapon, weapon, weapon];  // Outras armas adicionadas 4x
+      } else {
+        return [weapon];  // Frequência normal para todas as armas se a opção estiver desligada
+      }
+    });
+
+    // Selecionar uma nova arma, garantindo que não é igual à anterior se houver mais de uma opção
     let newWeapon = weaponPool[Math.floor(Math.random() * weaponPool.length)];
-    while (newWeapon === questStore.weapon) {
-      newWeapon = weaponPool[Math.floor(Math.random() * weaponPool.length)];
+    if (questStore.preventRepeatWeapon && selectedWeapons.length > 1) {
+      while (newWeapon === questStore.weapon) {
+        newWeapon = weaponPool[Math.floor(Math.random() * weaponPool.length)];
+      }
     }
 
-    // Build the monster pool based on user's selections
+    // Construir a pool de monstros com as categorias e as seleções do utilizador
     let monsterPool = [];
-    if (questStore.includeNormalMonsters) {
-      monsterPool = [...monsterPool, ...normalMonsters];
-    }
-    if (questStore.includeMidTierMonsters) {
-      monsterPool = [...monsterPool, ...midTierMonsters];
-    }
-    if (questStore.includeEndgameMonsters) {
-      // Include selected endgame monsters with double the chance
-      endgameMonsters.forEach(monster => {
-        monsterPool.push(monster, monster); // Double chance by adding twice
-      });
-    }
-    if (questStore.includeSuperEndgameMonsters) {
-      // Include super endgame monsters with 4x the chance
-      superEndgameMonsters.forEach(monster => {
-        if (questStore.includedSuperEndgameMonsters[monster]) { // Only include selected ones
-          for (let i = 0; i < 4; i++) {
-            monsterPool.push(monster); // Quadruple chance
-          }
-        }
-      });
-    }
+    if (questStore.includeNormalMonsters) monsterPool = [...monsterPool, ...normalMonsters];
+    if (questStore.includeMidTierMonsters) monsterPool = [...monsterPool, ...midTierMonsters];
+    if (questStore.includeEndgameMonsters) endgameMonsters.forEach(monster => monsterPool.push(monster, monster));
+    selectedSuperEndgameMonsters.forEach(monster => Array(4).fill(monster).forEach(() => monsterPool.push(monster)));
 
-    // Generate random monster and ensure it is not the same as the previous one
+    // Obter um conjunto único de monstros para verificar se há mais de uma opção única
+    const uniqueMonsters = new Set(monsterPool);
+    
+    // Selecionar um novo monstro, garantindo que não é igual ao anterior se houver mais de uma opção
     let newMonster = monsterPool[Math.floor(Math.random() * monsterPool.length)];
-    while (newMonster === questStore.monster) {
-      newMonster = monsterPool[Math.floor(Math.random() * monsterPool.length)];
+    if (questStore.preventRepeatMonster && uniqueMonsters.size > 1) {
+      while (newMonster === questStore.monster) {
+        newMonster = monsterPool[Math.floor(Math.random() * monsterPool.length)];
+      }
     }
 
-    // Update the selections
+    // Gerar quest com as armas e monstros selecionados se houverem armas e monstros selecionados
     questStore.setWeapon(newWeapon);
     questStore.setMonster(newMonster);
     questStore.addQuestToHistory(newWeapon, newMonster);
@@ -89,18 +98,56 @@ const App = observer(() => {
     <div className="App">
       <h1>MHW Random Quest Generator</h1>
       <div className="app-container">
-        <div className="generator-container">
-          <h3>Options</h3>
+        <div className="options-container">
+        <h3>Options:</h3>
           <div className="options">
-            {/* Checkbox for including Bowguns */}
+
+            {/* Opção para permitir frequência reduzida dos Bowguns */}
             <label>
               <input
                 type="checkbox"
-                checked={questStore.includeBowguns}
-                onChange={(e) => questStore.setIncludeBowguns(e.target.checked)}
+                checked={questStore.reduceBowgunFrequency}
+                onChange={(e) => questStore.setReduceBowgunFrequency(e.target.checked)}
               />
-              Include Bowguns
+              Reduce Bowgun Frequency
             </label>
+
+            {/* Opções para permitir repetições de armas e monstros */}
+            <label>
+              <input
+                type="checkbox"
+                checked={questStore.preventRepeatWeapon}
+                onChange={(e) => questStore.setPreventRepeatWeapon(e.target.checked)}
+              />
+              Prevent Weapon Repeat
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                checked={questStore.preventRepeatMonster}
+                onChange={(e) => questStore.setPreventRepeatMonster(e.target.checked)}
+              />
+              Prevent Monster Repeat
+            </label>
+
+            <h3>Weapons:</h3>
+              {Object.keys(questStore.selectedWeapons).map((weapon) => (
+                <label key={weapon} className="weapon-option">
+                  <input
+                    type="checkbox"
+                    checked={questStore.selectedWeapons[weapon]}
+                    onChange={() => questStore.toggleWeaponSelection(weapon)}
+                  />
+                  {weapon}
+                </label>
+              ))}
+          </div>
+
+          {/* Checkboxes for individual Super Endgame Monster Selection */}
+          <div  style={{ display: 'flex', flexDirection: 'column' }} className="monster-selection">
+            
+            <h3>Monsters:</h3>
 
             {/* Checkbox for including Normal Monsters */}
             <label>
@@ -109,7 +156,7 @@ const App = observer(() => {
                 checked={questStore.includeNormalMonsters}
                 onChange={(e) => questStore.setIncludeNormalMonsters(e.target.checked)}
               />
-              Include Normal Monsters
+              Include Low Tier Monsters
             </label>
 
             {/* Checkbox for including Mid Tier Monsters */}
@@ -119,7 +166,7 @@ const App = observer(() => {
                 checked={questStore.includeMidTierMonsters}
                 onChange={(e) => questStore.setIncludeMidTierMonsters(e.target.checked)}
               />
-              Include Mid-Tier Monsters
+              Include Mid Tier Monsters
             </label>
 
             {/* Checkbox for including Endgame Monsters */}
@@ -129,36 +176,22 @@ const App = observer(() => {
                 checked={questStore.includeEndgameMonsters}
                 onChange={(e) => questStore.setIncludeEndgameMonsters(e.target.checked)}
               />
-              Include Endgame Monsters
+              Include High Tier Monsters
             </label>
-
-            {/* Checkbox for including Super Endgame Monsters */}
-            {/* <label>
-              <input
-                type="checkbox"
-                checked={questStore.includeSuperEndgameMonsters}
-                onChange={(e) => questStore.setIncludeSuperEndgameMonsters(e.target.checked)}
-              />
-              Include Super Endgame Monsters (4x chance)
-            </label> */}
+            {Object.keys(questStore.selectedSuperEndgameMonsters).map((monster) => (
+              <label key={monster} className="monster-option">
+                <input
+                  type="checkbox"
+                  checked={questStore.selectedSuperEndgameMonsters[monster]}
+                  onChange={() => questStore.toggleSuperEndgameMonster(monster)}
+                />
+                {monster}
+              </label>
+            ))}
           </div>
-          {/* Checkboxes for individual Super Endgame Monster Selection */}
-          <h3>Include Super Endgame Monsters:</h3>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {superEndgameMonsters.map((monster) => (
-            <label key={monster} className="include-monster">
-              <input
-                type="checkbox"
-                checked={questStore.includedSuperEndgameMonsters[monster]}
-                onChange={() => questStore.toggleSuperEndgameMonster(monster)}
-              />
-              {monster}
-            </label>
-          ))}
-          </div>
+        </div>
 
-
-
+        <div className="generator-container">
           <Result weapon={questStore.weapon} monster={questStore.monster} />
           <div className="button-container">
             <button onClick={handleRandomSelection}  className="generate-button" >Generate Quest</button>
