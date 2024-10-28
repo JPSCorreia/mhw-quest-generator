@@ -6,7 +6,7 @@ const QuestHistory = ({ quests }) => {
       <h3 style={{textAlign: "end"}} className={quests.length === 20 ? 'red' : 'white'}>Last 20 Generated Quests</h3>
       <ul style={{listStyleType: "none", padding: 0}}>
         {quests.length === 0 ? (
-          <p>No quests generated yet.</p>
+          <p className='quest-history-item'>No quests generated yet.</p>
         ) : (
           quests.map((quest, index) => (
             <li key={index} className='quest-history-item'>

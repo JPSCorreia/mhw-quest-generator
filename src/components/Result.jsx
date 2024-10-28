@@ -57,7 +57,6 @@ const Result = ({ weapon, monster }) => {
 
   return (
     <div className="result-container">
-        <h1>Quest</h1>
         <div className="weapon-versus-monster-container">
 
           <div className="weapon-container">
