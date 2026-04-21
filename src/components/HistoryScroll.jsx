@@ -1,6 +1,6 @@
 import { rankFor } from '../lib/data';
 
-export default function HistoryScroll({ history }) {
+export default function HistoryScroll({ history, onRemove }) {
   return (
     <section className="qg-panel qg-col-history">
       <div className="qg-panel-hd">
@@ -26,6 +26,17 @@ export default function HistoryScroll({ history }) {
                   <div className="qg-history-pair">{q.weapon} · {q.monster}</div>
                   <div className="qg-history-meta">{rankFor(q.monster).name}</div>
                 </div>
+                <button
+                  type="button"
+                  className="qg-history-del"
+                  onClick={() => onRemove?.(q.id)}
+                  aria-label="Remove entry"
+                  title="Remove entry"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 6l12 12M18 6L6 18" />
+                  </svg>
+                </button>
               </div>
             ))}
           </div>

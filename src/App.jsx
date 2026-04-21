@@ -188,7 +188,10 @@ const App = observer(() => {
             </div>
           </section>
 
-          <HistoryScroll history={questStore.questHistory} />
+          <HistoryScroll
+            history={questStore.questHistory}
+            onRemove={(id) => questStore.removeQuestFromHistory(id)}
+          />
         </div>
       </div>
     </div>

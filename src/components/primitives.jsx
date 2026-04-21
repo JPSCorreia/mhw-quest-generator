@@ -29,7 +29,7 @@ export function MonsterChip({ name, on, onToggle }) {
       type="button"
     >
       <img src={monsterIcon(name)} alt="" />
-      <span style={{ fontSize: 10 }}>{name}</span>
+      <span>{name}</span>
     </button>
   );
 }

@@ -106,6 +106,11 @@ class QuestStore {
     this.persistState();
   }
 
+  removeQuestFromHistory(id) {
+    this.questHistory = this.questHistory.filter((q) => q.id !== id);
+    this.persistState();
+  }
+
   clearQuestHistory() {
     // Limpar a quest atual e o histórico
     this.weapon = '';

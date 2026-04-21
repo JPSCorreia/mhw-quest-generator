@@ -33,7 +33,6 @@ export default function Crest() {
         </div>
       </div>
       <div className="qg-status">
-        <span className="qg-live-dot" />
         <span>COMMANDER <span className="hr">HR 999</span></span>
         <span className="sep">·</span>
         <span>ASTERA {clock}</span>
