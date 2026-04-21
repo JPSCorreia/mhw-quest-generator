@@ -1,0 +1,30 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Form Inputs</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:24px;background:var(--ink-800);font-family:var(--font-sans);color:var(--fg);display:flex;flex-direction:column;gap:14px}
+  .row{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+  .check{display:inline-flex;gap:10px;align-items:center;cursor:pointer;font-size:13px;letter-spacing:.04em}
+  .box{width:18px;height:18px;border:1.5px solid var(--gold-500);background:var(--ink-700);display:inline-flex;align-items:center;justify-content:center;position:relative;clip-path:polygon(0 3px,3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px))}
+  .box.checked{background:var(--emerald-500);border-color:var(--emerald-300);box-shadow:0 0 10px rgba(91,255,125,.5)}
+  .box.checked::after{content:"";width:10px;height:5px;border-left:2px solid var(--ink-900);border-bottom:2px solid var(--ink-900);transform:rotate(-45deg) translate(1px,-1px)}
+  .chip{display:inline-flex;gap:6px;align-items:center;padding:6px 12px;border:1px solid var(--gold-500);background:var(--ink-700);color:var(--parch-200);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-family:var(--font-display);font-weight:600}
+  .chip.active{background:var(--parch-200);color:var(--fg-ink);border-color:var(--gold-300);box-shadow:0 0 0 1px var(--emerald-500) inset,0 0 12px rgba(91,255,125,.3)}
+  .input{background:var(--ink-700);border:1px solid var(--gold-500);padding:8px 12px;color:var(--parch-100);font-family:var(--font-mono);font-size:13px;width:200px}
+  .input:focus{outline:2px solid var(--emerald-500);outline-offset:2px}
+  .lbl{font-family:var(--font-mono);font-size:10px;color:var(--fg-subtle);min-width:80px}
+</style></head><body>
+  <div class="row"><div class="lbl">CHECKBOX</div>
+    <label class="check"><span class="box checked"></span>Include High Rank</label>
+    <label class="check"><span class="box"></span>Prevent Repeat</label>
+  </div>
+  <div class="row"><div class="lbl">CHIPS</div>
+    <span class="chip active">Great Sword</span>
+    <span class="chip">Dual Blades</span>
+    <span class="chip">Bow</span>
+    <span class="chip active">Hammer</span>
+  </div>
+  <div class="row"><div class="lbl">INPUT</div>
+    <input class="input" value="HR 42" />
+  </div>
+</body></html>

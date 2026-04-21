@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Motion & Interaction</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:20px;background:var(--ink-800);font-family:var(--font-sans);color:var(--fg);display:grid;grid-template-columns:1fr 1fr;gap:20px;font-size:12px}
+  .card{background:var(--ink-700);border:1px solid var(--border);padding:16px}
+  h4{font-family:var(--font-display);font-size:10px;letter-spacing:.24em;color:var(--gold-300);margin:0 0 10px;text-transform:uppercase}
+  .row{display:flex;align-items:center;gap:12px;margin-bottom:6px;font-family:var(--font-mono);color:var(--fg-muted);font-size:10px}
+  .dot{width:10px;height:10px;background:var(--emerald-500);border-radius:50%}
+  @keyframes pulse{0%,100%{opacity:.5;box-shadow:0 0 4px var(--emerald-500)}50%{opacity:1;box-shadow:0 0 14px var(--emerald-500)}}
+  .pulse{animation:pulse 3s ease-in-out infinite}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+  .shake{animation:shake .4s ease-in-out infinite}
+  .name{font-family:var(--font-display);font-weight:700;letter-spacing:.08em;color:var(--parch-100);text-transform:uppercase}
+</style></head><body>
+<div class="card"><h4>Easing · Duration</h4>
+  <div class="row"><span style="width:70px">fast</span><span>120ms</span><span style="color:var(--fg-subtle)">micro hover</span></div>
+  <div class="row"><span style="width:70px">med</span><span>260ms</span><span style="color:var(--fg-subtle)">default</span></div>
+  <div class="row"><span style="width:70px">slow</span><span>480ms</span><span style="color:var(--fg-subtle)">reveal</span></div>
+  <div class="row"><span style="width:70px">spring</span><span>cubic-bezier(.34,1.56,.64,1)</span></div>
+</div>
+<div class="card"><h4>Live states</h4>
+  <div class="row"><span class="dot pulse"></span><span>emerald pulse · 3s</span></div>
+  <div class="row"><span class="name shake">rolling…</span></div>
+  <div class="row" style="margin-top:10px;color:var(--fg-subtle)">• hover: +4% brightness</div>
+  <div class="row" style="color:var(--fg-subtle)">• press: translateY(1px), −6% brightness</div>
+  <div class="row" style="color:var(--fg-subtle)">• focus: 2px emerald outline, 2px offset</div>
+</div>
+</body></html>

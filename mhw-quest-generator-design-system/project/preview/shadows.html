@@ -1,0 +1,16 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Shadows & Glow</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:28px;background:var(--ink-800);display:grid;grid-template-columns:repeat(4,1fr);gap:16px;font-family:var(--font-sans)}
+  .s{height:90px;background:var(--ink-600);border:1px solid var(--border);display:flex;align-items:flex-end;justify-content:center;padding:8px;font-family:var(--font-mono);font-size:10px;color:var(--fg-muted);letter-spacing:.04em}
+</style></head><body>
+  <div class="s" style="box-shadow:var(--shadow-sm)">shadow-sm</div>
+  <div class="s" style="box-shadow:var(--shadow-md)">shadow-md</div>
+  <div class="s" style="box-shadow:var(--shadow-lg)">shadow-lg</div>
+  <div class="s" style="box-shadow:var(--shadow-inset);border:2px solid var(--gold-500)">inset · engraved</div>
+  <div class="s" style="box-shadow:var(--glow-emerald);border-color:var(--emerald-500)">glow-emerald</div>
+  <div class="s" style="box-shadow:var(--glow-gold);border-color:var(--gold-300)">glow-gold</div>
+  <div class="s" style="box-shadow:var(--glow-danger);border-color:var(--crimson-500)">glow-danger</div>
+  <div class="s" style="background:var(--parch-200);color:var(--fg-ink);box-shadow:0 18px 48px rgba(0,0,0,.7)">scroll drop</div>
+</body></html>

@@ -1,207 +1,194 @@
-import { observer } from "mobx-react-lite";
-import questStore from './stores/questStore'; // Import the MobX store
-import Result from './components/Result';
-import QuestHistory from './components/QuestHistory';
-import './App.css';
+import { observer } from 'mobx-react-lite';
+import { useState } from 'react';
+import questStore from './stores/questStore';
+import { LOW_TIER, MID_TIER, HIGH_TIER, BOWGUNS } from './lib/data';
+import { monsterIcon, weaponIcon } from './lib/assets';
+import Crest from './components/Crest';
+import Armory from './components/Armory';
+import Bestiary from './components/Bestiary';
+import HistoryScroll from './components/HistoryScroll';
+import VersusMark from './components/VersusMark';
+import CommissionCard from './components/CommissionCard';
+import bgImage from './assets/images/new-background.jpg';
+import './styles/tokens.css';
+import './styles/kit.css';
 
-const allWeapons = {
-  melee: ['Great Sword', 'Sword & Shield', 'Dual Blades','Long Sword', 'Hammer', 'Hunting Horn', 'Lance', 'Gunlance', 'Switch Axe', 'Charge Blade', 'Insect Glaive', 'Bow'],
-  bowguns: ['Light Bowgun', 'Heavy Bowgun'] // 3x less likely to be selected
+const FLAG_ACTIONS = {
+  low:          (v) => questStore.setIncludeNormalMonsters(v),
+  mid:          (v) => questStore.setIncludeMidTierMonsters(v),
+  high:         (v) => questStore.setIncludeEndgameMonsters(v),
+  reduceBowgun: (v) => questStore.setReduceBowgunFrequency(v),
+  noRepeatW:    (v) => questStore.setPreventRepeatWeapon(v),
+  noRepeatM:    (v) => questStore.setPreventRepeatMonster(v),
 };
 
-// Define the arrays of monsters
-const normalMonsters = ['Anjanath', 'Banbaro', 'Barroth', 'Beotodus', 'Coral Pukei-Pukei','Diablos', 'Dodogama', 'Great Girros', 'Great Jagras', 'Jyuratodus','Kulu-Ya-Ku', 'Lavasioth', 'Legiana', 'Nightshade Paolumu', 'Odogaron', 'Paolumu', 'Pukei-Pukei', 'Radobaan', 'Rathalos', 'Rathian', 'Tobi-Kadachi', 'Tzitzi-Ya-Ku', 'Uragaan'];
-const midTierMonsters = ['Acidic Glavenus', 'Azure Rathalos', 'Black Diablos', 'Brachydios', 'Barioth', 'Ebony Odogaron', 'Fulgur Anjanath', 'Glavenus', 'Nargacuga', 'Pink Rathian', 'Seething Bazelgeuse', 'Shrieking Legiana', 'Tigrex', 'Viper Tobi-Kadachi', 'Yian Garuga', 'Zinogre'];
-const endgameMonsters = ['Rajang', 'Blackveil Vaal Hazak', 'Teostra', 'Lunastra', 'Kushala Daora', 'Furious Rajang', 'Gold Rathian', 'Silver Rathalos', "Shara Ishvalda", "Ruiner Nergigante", "Stygian Zinogre", "Brute Tigrex", 'Frostfang Barioth', 'Kirin', 'Savage Deviljho', 'Scarred Yian Garuga'];
-
 const App = observer(() => {
+  const [rolling, setRolling] = useState(false);
+  const [rollShown, setRollShown] = useState({ weapon: '', monster: '' });
 
-  const handleRandomSelection = () => {
+  const selectedWeaponsArr = Object.keys(questStore.selectedWeapons)
+    .filter((w) => questStore.selectedWeapons[w]);
+  const selectedSuperArr = Object.keys(questStore.selectedSuperEndgameMonsters)
+    .filter((m) => questStore.selectedSuperEndgameMonsters[m]);
 
-    const selectedSuperEndgameMonsters = Object.keys(questStore.selectedSuperEndgameMonsters).filter((monster) => questStore.selectedSuperEndgameMonsters[monster]);
-    const selectedWeapons = Object.keys(questStore.selectedWeapons).filter((weapon) => questStore.selectedWeapons[weapon]);
-    
-    if (selectedWeapons.length === 0) {
-      alert("Please select at least one weapon to generate a quest.");
-      return;
-    }
-    if (
-      !questStore.includeNormalMonsters &&
-      !questStore.includeMidTierMonsters &&
-      !questStore.includeEndgameMonsters &&
-      selectedSuperEndgameMonsters.length === 0
-    ) {
-      alert("Please select at least one monster category to generate a quest.");
-      return;
-    }
+  const canGenerate =
+    selectedWeaponsArr.length > 0 &&
+    (questStore.includeNormalMonsters ||
+     questStore.includeMidTierMonsters ||
+     questStore.includeEndgameMonsters ||
+     selectedSuperArr.length > 0);
 
-    // Verificar se há apenas uma arma ou monstro e a opção de prevenir repetição está ativada
-    if (questStore.preventRepeatWeapon && selectedWeapons.length === 1) {
-      alert("Prevent Weapon Repeat is active, but only one weapon is selected. Please select more weapons or disable this option.");
-      return;
-    }
-    if (questStore.preventRepeatMonster && (!questStore.includeNormalMonsters && !questStore.includeMidTierMonsters && !questStore.includeEndgameMonsters && selectedSuperEndgameMonsters.length === 1)) {
-      alert("Prevent Monster Repeat is active, but only one monster is selected. Please select more monsters or disable this option.");
-      return;
-    }
-
-    // Construir a pool de armas com base na opção de frequência reduzida dos bowguns
-    let weaponPool = selectedWeapons.flatMap((weapon) => {
-      // Se `reduceBowgunFrequency` estiver ligado, adicionamos os bowguns apenas uma vez, e as outras armas 4 vezes
-      if (questStore.reduceBowgunFrequency && allWeapons.bowguns.includes(weapon)) {
-        return [weapon];  // Bowguns com chance reduzida
-      } else if (questStore.reduceBowgunFrequency && !allWeapons.bowguns.includes(weapon)) {
-        return [weapon, weapon, weapon, weapon];  // Outras armas adicionadas 4x
-      } else {
-        return [weapon];  // Frequência normal para todas as armas se a opção estiver desligada
-      }
+  const rollOnce = () => {
+    const wPool = selectedWeaponsArr.flatMap((w) => {
+      if (questStore.reduceBowgunFrequency && BOWGUNS.includes(w)) return [w];
+      if (questStore.reduceBowgunFrequency) return [w, w, w, w];
+      return [w];
     });
+    let mPool = [];
+    if (questStore.includeNormalMonsters)  mPool = mPool.concat(LOW_TIER);
+    if (questStore.includeMidTierMonsters) mPool = mPool.concat(MID_TIER);
+    if (questStore.includeEndgameMonsters) mPool = mPool.concat(HIGH_TIER, HIGH_TIER);
+    selectedSuperArr.forEach((m) => mPool.push(m, m, m, m));
+    if (wPool.length === 0 || mPool.length === 0) return null;
 
-    // Selecionar uma nova arma, garantindo que não é igual à anterior se houver mais de uma opção
-    let newWeapon = weaponPool[Math.floor(Math.random() * weaponPool.length)];
-    if (questStore.preventRepeatWeapon && selectedWeapons.length > 1) {
-      while (newWeapon === questStore.weapon) {
-        newWeapon = weaponPool[Math.floor(Math.random() * weaponPool.length)];
-      }
+    let w = wPool[Math.floor(Math.random() * wPool.length)];
+    if (questStore.preventRepeatWeapon && selectedWeaponsArr.length > 1) {
+      while (w === questStore.weapon) w = wPool[Math.floor(Math.random() * wPool.length)];
     }
-
-    // Construir a pool de monstros com as categorias e as seleções do utilizador
-    let monsterPool = [];
-    if (questStore.includeNormalMonsters) monsterPool = [...monsterPool, ...normalMonsters];
-    if (questStore.includeMidTierMonsters) monsterPool = [...monsterPool, ...midTierMonsters];
-    if (questStore.includeEndgameMonsters) endgameMonsters.forEach(monster => monsterPool.push(monster, monster));
-    selectedSuperEndgameMonsters.forEach(monster => Array(4).fill(monster).forEach(() => monsterPool.push(monster)));
-
-    // Obter um conjunto único de monstros para verificar se há mais de uma opção única
-    const uniqueMonsters = new Set(monsterPool);
-    
-    // Selecionar um novo monstro, garantindo que não é igual ao anterior se houver mais de uma opção
-    let newMonster = monsterPool[Math.floor(Math.random() * monsterPool.length)];
-    if (questStore.preventRepeatMonster && uniqueMonsters.size > 1) {
-      while (newMonster === questStore.monster) {
-        newMonster = monsterPool[Math.floor(Math.random() * monsterPool.length)];
-      }
+    let m = mPool[Math.floor(Math.random() * mPool.length)];
+    const uniqM = new Set(mPool);
+    if (questStore.preventRepeatMonster && uniqM.size > 1) {
+      while (m === questStore.monster) m = mPool[Math.floor(Math.random() * mPool.length)];
     }
-
-    // Gerar quest com as armas e monstros selecionados se houverem armas e monstros selecionados
-    questStore.setWeapon(newWeapon);
-    questStore.setMonster(newMonster);
-    questStore.addQuestToHistory(newWeapon, newMonster);
-
+    return { weapon: w, monster: m };
   };
 
-  const handleClearHistory = () => {
-    questStore.clearQuestHistory(); // Limpar o histórico e a quest atual
+  const handleGenerate = () => {
+    if (!canGenerate || rolling) return;
+    setRolling(true);
+    let ticks = 0;
+    const id = setInterval(() => {
+      ticks += 1;
+      const peek = rollOnce();
+      if (peek) setRollShown(peek);
+      if (ticks >= 7) {
+        clearInterval(id);
+        const final = rollOnce();
+        if (final) {
+          questStore.setWeapon(final.weapon);
+          questStore.setMonster(final.monster);
+          questStore.addQuestToHistory(final.weapon, final.monster);
+          setRollShown(final);
+        }
+        setRolling(false);
+      }
+    }, 65);
   };
+
+  const handleClear = () => {
+    questStore.clearQuestHistory();
+    setRollShown({ weapon: '', monster: '' });
+  };
+
+  const showMonster = rolling ? rollShown.monster : questStore.monster;
+  const showWeapon  = rolling ? rollShown.weapon  : questStore.weapon;
+  const hasResult = !!showMonster && !!showWeapon;
+
+  const stageClass =
+    'qg-panel qg-stage qg-col-stage' +
+    (rolling ? ' qg-rolling' : '') +
+    (hasResult && !rolling ? ' qg-revealed' : '');
 
   return (
-    <div className="App">
-      <h1>MHW Random Quest Generator</h1>
-      <div className="app-container">
-        <div className="options-container">
-        <h3>Options:</h3>
-          <div className="options">
-
-            {/* Opção para permitir frequência reduzida dos Bowguns */}
-            <label>
-              <input
-                type="checkbox"
-                checked={questStore.reduceBowgunFrequency}
-                onChange={(e) => questStore.setReduceBowgunFrequency(e.target.checked)}
-              />
-              Reduce Bowgun Frequency
-            </label>
-
-            {/* Opções para permitir repetições de armas e monstros */}
-            <label>
-              <input
-                type="checkbox"
-                checked={questStore.preventRepeatWeapon}
-                onChange={(e) => questStore.setPreventRepeatWeapon(e.target.checked)}
-              />
-              Prevent Weapon Repeat
-            </label>
-
-            <label>
-              <input
-                type="checkbox"
-                checked={questStore.preventRepeatMonster}
-                onChange={(e) => questStore.setPreventRepeatMonster(e.target.checked)}
-              />
-              Prevent Monster Repeat
-            </label>
-
-            <h3>Weapons:</h3>
-              {Object.keys(questStore.selectedWeapons).map((weapon) => (
-                <label key={weapon} className="weapon-option">
-                  <input
-                    type="checkbox"
-                    checked={questStore.selectedWeapons[weapon]}
-                    onChange={() => questStore.toggleWeaponSelection(weapon)}
-                  />
-                  {weapon}
-                </label>
-              ))}
+    <div className="qg-root" style={{ '--qg-bg-image': `url(${bgImage})` }}>
+      <div className="qg-shell">
+        <Crest />
+        <div className="qg-grid">
+          <div className="qg-col-options">
+            <Armory
+              selected={questStore.selectedWeapons}
+              onToggle={(w) => questStore.toggleWeaponSelection(w)}
+            />
+            <Bestiary
+              includeLow={questStore.includeNormalMonsters}
+              includeMid={questStore.includeMidTierMonsters}
+              includeHigh={questStore.includeEndgameMonsters}
+              reduceBowgun={questStore.reduceBowgunFrequency}
+              noRepeatW={questStore.preventRepeatWeapon}
+              noRepeatM={questStore.preventRepeatMonster}
+              onFlag={(k, v) => FLAG_ACTIONS[k](v)}
+              superSel={questStore.selectedSuperEndgameMonsters}
+              onToggleSuper={(m) => questStore.toggleSuperEndgameMonster(m)}
+            />
           </div>
 
-          {/* Checkboxes for individual Super Endgame Monster Selection */}
-          <div  style={{ display: 'flex', flexDirection: 'column' }} className="monster-selection">
-            
-            <h3>Monsters:</h3>
+          <section className={stageClass}>
+            <div className="qg-stage-head">
+              <div className="qg-stage-eyebrow">
+                {rolling ? 'rolling the dice…' : hasResult ? 'your commission is posted' : 'awaiting orders'}
+              </div>
+              <h1 className="qg-stage-title">
+                {rolling ? 'SUMMONING' : hasResult ? 'COMMISSION' : 'QUEST BOARD'}
+              </h1>
+              {!hasResult && !rolling && (
+                <p className="qg-stage-sub">
+                  Select your armory and bestiary terms. Post the commission when you&apos;re ready to answer the call.
+                </p>
+              )}
+            </div>
 
-            {/* Checkbox for including Normal Monsters */}
-            <label>
-              <input
-                type="checkbox"
-                checked={questStore.includeNormalMonsters}
-                onChange={(e) => questStore.setIncludeNormalMonsters(e.target.checked)}
-              />
-              Include Low Tier Monsters
-            </label>
+            {hasResult ? (
+              <>
+                <div className="qg-versus" key={showWeapon + showMonster + (rolling ? 'r' : '')}>
+                  <div className="qg-vs-face">
+                    <div className="qg-vs-role">HUNTER&apos;S BLADE</div>
+                    <div className="qg-vs-portrait weapon">
+                      <div className="frame-orn" />
+                      {showWeapon && <img src={weaponIcon(showWeapon)} alt="" />}
+                    </div>
+                    <div className="qg-vs-name">{showWeapon || '—'}</div>
+                  </div>
+                  <VersusMark />
+                  <div className="qg-vs-face">
+                    <div className="qg-vs-role">QUARRY</div>
+                    <div className="qg-vs-portrait emerald">
+                      <div className="frame-orn" />
+                      {showMonster && <img src={monsterIcon(showMonster)} alt="" />}
+                    </div>
+                    <div className="qg-vs-name">{showMonster || '—'}</div>
+                  </div>
+                </div>
+                {<CommissionCard monster={showMonster} />}
+              </>
+            ) : (
+              <div className="qg-stage-empty">
+                <span className="big">The board is empty.</span>
+                No commissions have been posted.<br />
+                Generate a quest to summon your next hunt.
+              </div>
+            )}
 
-            {/* Checkbox for including Mid Tier Monsters */}
-            <label>
-              <input
-                type="checkbox"
-                checked={questStore.includeMidTierMonsters}
-                onChange={(e) => questStore.setIncludeMidTierMonsters(e.target.checked)}
-              />
-              Include Mid Tier Monsters
-            </label>
+            <div className="qg-orn">◆ ◆ ◆</div>
 
-            {/* Checkbox for including Endgame Monsters */}
-            <label>
-              <input
-                type="checkbox"
-                checked={questStore.includeEndgameMonsters}
-                onChange={(e) => questStore.setIncludeEndgameMonsters(e.target.checked)}
-              />
-              Include High Tier Monsters
-            </label>
-            {Object.keys(questStore.selectedSuperEndgameMonsters).map((monster) => (
-              <label key={monster} className="monster-option">
-                <input
-                  type="checkbox"
-                  checked={questStore.selectedSuperEndgameMonsters[monster]}
-                  onChange={() => questStore.toggleSuperEndgameMonster(monster)}
-                />
-                {monster}
-              </label>
-            ))}
-          </div>
-        </div>
+            <div className="qg-ctas">
+              <button
+                className="qg-btn qg-btn-primary"
+                onClick={handleGenerate}
+                disabled={!canGenerate || rolling}
+              >
+                {rolling ? 'Rolling…' : hasResult ? 'Reroll Commission' : 'Post Commission'}
+              </button>
+              <button
+                className="qg-btn qg-btn-danger"
+                onClick={handleClear}
+                disabled={questStore.questHistory.length === 0 && !hasResult}
+              >
+                Clear Board
+              </button>
+            </div>
+          </section>
 
-        <div className="generator-container">
-          <Result weapon={questStore.weapon} monster={questStore.monster} />
-          <div className="button-container">
-            <button onClick={handleRandomSelection}  className="generate-button" >Generate Quest</button>
-            <button onClick={handleClearHistory} className="clear-button" >Clear History</button>
-          </div>
-        </div>
-
-        
-        <div className="quest-history-container">
-          <QuestHistory quests={questStore.questHistory} />
+          <HistoryScroll history={questStore.questHistory} />
         </div>
       </div>
     </div>

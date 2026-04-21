@@ -1,0 +1,30 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Colors — Metallic & Accent</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:20px;background:var(--ink-800);font-family:var(--font-sans);color:var(--fg)}
+  .row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .sw{display:flex;flex-direction:column;gap:4px}
+  .chip{height:64px;border-radius:4px;border:1px solid var(--border);position:relative;overflow:hidden}
+  .chip::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 40%)}
+  .chip.glow{box-shadow:0 0 18px rgba(91,255,125,.6)}
+  .name{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-muted)}
+  .hex{font-family:var(--font-mono);font-size:10px;color:var(--fg-subtle)}
+  .group{margin-bottom:16px}
+  .label{font-family:var(--font-display);font-size:10px;letter-spacing:.24em;color:var(--gold-300);text-transform:uppercase;margin-bottom:6px}
+</style></head><body>
+<div class="group"><div class="label">Metallic — heraldic</div><div class="row">
+  <div class="sw"><div class="chip" style="background:var(--gold-100)"></div><div class="name">gold-100</div><div class="hex">#f3e0a1</div></div>
+  <div class="sw"><div class="chip" style="background:var(--gold-300)"></div><div class="name">gold-300</div><div class="hex">#d9b24e</div></div>
+  <div class="sw"><div class="chip" style="background:var(--gold-500)"></div><div class="name">gold-500</div><div class="hex">#a37920</div></div>
+  <div class="sw"><div class="chip" style="background:var(--silver-200)"></div><div class="name">silver-200</div><div class="hex">#d6d4ce</div></div>
+  <div class="sw"><div class="chip" style="background:var(--silver-400)"></div><div class="name">silver-400</div><div class="hex">#8a8880</div></div>
+</div></div>
+<div class="group"><div class="label">Emerald — commission seal</div><div class="row">
+  <div class="sw"><div class="chip" style="background:var(--emerald-300)"></div><div class="name">em-300</div><div class="hex">#a6ffb0</div></div>
+  <div class="sw"><div class="chip glow" style="background:var(--emerald-500)"></div><div class="name">em-500 ★</div><div class="hex">#21c94a</div></div>
+  <div class="sw"><div class="chip" style="background:var(--emerald-700)"></div><div class="name">em-700</div><div class="hex">#0c6d23</div></div>
+  <div class="sw"><div class="chip" style="background:var(--crimson-500)"></div><div class="name">crimson-500</div><div class="hex">#e0473a</div></div>
+  <div class="sw"><div class="chip" style="background:var(--crimson-700)"></div><div class="name">crimson-700</div><div class="hex">#8a1c13</div></div>
+</div></div>
+</body></html>

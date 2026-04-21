@@ -102,8 +102,7 @@ class QuestStore {
   }
 
   addQuestToHistory(weapon, monster) {
-    // Add quest and keep last 20
-    this.questHistory = [{ weapon, monster }, ...this.questHistory].slice(0, 20);
+    this.questHistory = [{ id: Date.now(), weapon, monster }, ...this.questHistory].slice(0, 99);
     this.persistState();
   }
 

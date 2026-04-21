@@ -1,0 +1,28 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Buttons</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:24px;background:var(--ink-800);display:flex;flex-direction:column;gap:16px;font-family:var(--font-sans)}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .btn{font-family:var(--font-display);font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:12px 22px;border:none;cursor:pointer;font-size:13px;position:relative;transition:all .16s var(--ease-out)}
+  .btn-primary{background:linear-gradient(180deg,#2b8a44,#0c6d23);color:#fff;border:1px solid var(--emerald-400);box-shadow:var(--glow-emerald),var(--shadow-inset);clip-path:polygon(0 8px,8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px))}
+  .btn-danger{background:linear-gradient(180deg,#b23228,#6a140e);color:#fff;border:1px solid var(--crimson-500);box-shadow:var(--glow-danger),var(--shadow-inset);clip-path:polygon(0 8px,8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px))}
+  .btn-ghost{background:transparent;color:var(--parch-200);border:1px solid var(--gold-500)}
+  .btn-ghost:hover{background:rgba(217,178,78,.08);color:var(--gold-100)}
+  .btn-sm{padding:8px 14px;font-size:11px}
+  .lbl{font-family:var(--font-mono);font-size:10px;color:var(--fg-subtle);min-width:80px}
+</style></head><body>
+  <div class="row"><div class="lbl">PRIMARY</div>
+    <button class="btn btn-primary">Generate Quest</button>
+    <button class="btn btn-primary btn-sm">Roll</button>
+    <button class="btn btn-primary" style="opacity:.5;cursor:not-allowed">Disabled</button>
+  </div>
+  <div class="row"><div class="lbl">DANGER</div>
+    <button class="btn btn-danger">Clear History</button>
+    <button class="btn btn-danger btn-sm">Abandon</button>
+  </div>
+  <div class="row"><div class="lbl">GHOST</div>
+    <button class="btn btn-ghost">View Bestiary</button>
+    <button class="btn btn-ghost btn-sm">Filter</button>
+  </div>
+</body></html>

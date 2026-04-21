@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Quest Board · Research Commission · Print</title>
+<link rel="icon" type="image/svg+xml" href="../../assets/mhw-logo.svg"/>
+<link rel="stylesheet" href="../../colors_and_type.css"/>
+<link rel="stylesheet" href="kit.css"/>
+<style>
+  /* Pre-populate a known quest so the PDF is meaningful */
+  /* Print sizing */
+  @page { size: 1280px 900px; margin: 0; }
+  html, body { margin: 0; padding: 0; background: #0f0820; }
+  @media print {
+    html, body { background: #0f0820 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; animation: none !important; transition: none !important; }
+    .qg-root { min-height: auto !important; }
+    .qg-shell { padding-top: 20px !important; padding-bottom: 20px !important; }
+    /* Strip hover-only cues */
+    .qg-btn { box-shadow: none !important; }
+    /* Kill the live blinking dot */
+    .qg-live-dot { animation: none !important; opacity: 1 !important; }
+    /* Remove any overflow clipping so history scroll is fully visible */
+    .qg-history-list { max-height: none !important; overflow: visible !important; }
+    /* Remove the fixed background-image attachment issue */
+    .qg-root::before { position: absolute !important; }
+    .qg-root::after  { position: absolute !important; }
+  }
+  /* Hide history scrollbar for a clean print */
+  .qg-history-list::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script>
+  // Pre-seed a hunt so the parchment commission card shows in the PDF
+  try {
+    localStorage.setItem('qg-kit-state-v1', JSON.stringify({
+      weapon: 'Great Sword',
+      monster: 'Nergigante',
+      selectedWeapons: {"Great Sword":true,"Sword & Shield":true,"Dual Blades":true,"Long Sword":true,"Hammer":true,"Hunting Horn":false,"Lance":false,"Gunlance":true,"Switch Axe":true,"Charge Blade":true,"Insect Glaive":false,"Bow":true,"Light Bowgun":false,"Heavy Bowgun":false},
+      selectedSuper: {"Fatalis":true,"Alatreon":true,"Kulve Taroth":false,"Velkhana":true,"Namielle":false,"Raging Brachydios":true},
+      flags: { low: false, mid: true, high: true, reduceBowgun: true, noRepeatW: true, noRepeatM: false },
+      history: [
+        { id: 5, weapon: 'Great Sword', monster: 'Nergigante' },
+        { id: 4, weapon: 'Bow', monster: 'Velkhana' },
+        { id: 3, weapon: 'Charge Blade', monster: 'Rathalos' },
+        { id: 2, weapon: 'Hammer', monster: 'Diablos' },
+        { id: 1, weapon: 'Dual Blades', monster: 'Teostra' },
+      ]
+    }));
+  } catch(e) {}
+</script>
+
+<script type="text/babel" src="data.js"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="QuestGenerator.jsx"></script>
+<script type="text/babel">
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(<QuestGenerator/>);
+
+  // Auto-print once the app, fonts, and images are ready.
+  (async () => {
+    try {
+      await new Promise(r => setTimeout(r, 300));           // let React mount
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      // Wait for images (portraits, weapon, crest) to load
+      const imgs = Array.from(document.images || []);
+      await Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(res => { img.onload = img.onerror = res; })));
+      await new Promise(r => setTimeout(r, 500));
+      window.print();
+    } catch(e) { setTimeout(() => window.print(), 1500); }
+  })();
+</script>
+</body>
+</html>

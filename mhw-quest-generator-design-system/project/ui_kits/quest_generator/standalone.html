@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Quest Board · Research Commission</title>
+
+<!-- Crest / logo lifted to __resources so it survives bundling (used from JSX) -->
+<meta name="ext-resource-dependency" content="../../assets/mhw-logo.svg" data-resource-id="mhwLogo" />
+
+<!-- Weapon portraits (14) -->
+<meta name="ext-resource-dependency" content="../../assets/weapons/Great Sword.png" data-resource-id="w_Great_Sword" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Sword & Shield.png" data-resource-id="w_Sword___Shield" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Dual Blades.png" data-resource-id="w_Dual_Blades" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Long Sword.png" data-resource-id="w_Long_Sword" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Hammer.png" data-resource-id="w_Hammer" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Hunting Horn.png" data-resource-id="w_Hunting_Horn" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Lance.png" data-resource-id="w_Lance" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Gunlance.png" data-resource-id="w_Gunlance" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Switch Axe.png" data-resource-id="w_Switch_Axe" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Charge Blade.png" data-resource-id="w_Charge_Blade" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Insect Glaive.png" data-resource-id="w_Insect_Glaive" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Bow.png" data-resource-id="w_Bow" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Light Bowgun.png" data-resource-id="w_Light_Bowgun" />
+<meta name="ext-resource-dependency" content="../../assets/weapons/Heavy Bowgun.png" data-resource-id="w_Heavy_Bowgun" />
+
+<!-- Monster portraits (62) -->
+<meta name="ext-resource-dependency" content="../../assets/monsters/Anjanath.webp" data-resource-id="m_Anjanath" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Banbaro.webp" data-resource-id="m_Banbaro" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Barroth.webp" data-resource-id="m_Barroth" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Beotodus.webp" data-resource-id="m_Beotodus" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Coral Pukei-Pukei.webp" data-resource-id="m_Coral_Pukei_Pukei" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Diablos.webp" data-resource-id="m_Diablos" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Dodogama.webp" data-resource-id="m_Dodogama" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Great Girros.webp" data-resource-id="m_Great_Girros" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Great Jagras.webp" data-resource-id="m_Great_Jagras" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Jyuratodus.webp" data-resource-id="m_Jyuratodus" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Kulu-Ya-Ku.webp" data-resource-id="m_Kulu_Ya_Ku" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Lavasioth.webp" data-resource-id="m_Lavasioth" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Legiana.webp" data-resource-id="m_Legiana" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Nightshade Paolumu.webp" data-resource-id="m_Nightshade_Paolumu" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Odogaron.webp" data-resource-id="m_Odogaron" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Paolumu.webp" data-resource-id="m_Paolumu" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Pukei-Pukei.webp" data-resource-id="m_Pukei_Pukei" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Radobaan.webp" data-resource-id="m_Radobaan" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Rathalos.webp" data-resource-id="m_Rathalos" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Rathian.webp" data-resource-id="m_Rathian" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Tobi-Kadachi.webp" data-resource-id="m_Tobi_Kadachi" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Tzitzi-Ya-Ku.webp" data-resource-id="m_Tzitzi_Ya_Ku" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Uragaan.webp" data-resource-id="m_Uragaan" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Acidic Glavenus.webp" data-resource-id="m_Acidic_Glavenus" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Azure Rathalos.webp" data-resource-id="m_Azure_Rathalos" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Black Diablos.webp" data-resource-id="m_Black_Diablos" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Brachydios.webp" data-resource-id="m_Brachydios" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Barioth.webp" data-resource-id="m_Barioth" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Ebony Odogaron.webp" data-resource-id="m_Ebony_Odogaron" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Fulgur Anjanath.webp" data-resource-id="m_Fulgur_Anjanath" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Glavenus.webp" data-resource-id="m_Glavenus" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Nargacuga.webp" data-resource-id="m_Nargacuga" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Pink Rathian.webp" data-resource-id="m_Pink_Rathian" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Seething Bazelgeuse.webp" data-resource-id="m_Seething_Bazelgeuse" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Shrieking Legiana.webp" data-resource-id="m_Shrieking_Legiana" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Tigrex.webp" data-resource-id="m_Tigrex" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Viper Tobi-Kadachi.webp" data-resource-id="m_Viper_Tobi_Kadachi" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Yian Garuga.webp" data-resource-id="m_Yian_Garuga" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Zinogre.webp" data-resource-id="m_Zinogre" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Rajang.webp" data-resource-id="m_Rajang" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Blackveil Vaal Hazak.webp" data-resource-id="m_Blackveil_Vaal_Hazak" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Teostra.webp" data-resource-id="m_Teostra" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Lunastra.webp" data-resource-id="m_Lunastra" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Kushala Daora.webp" data-resource-id="m_Kushala_Daora" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Furious Rajang.webp" data-resource-id="m_Furious_Rajang" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Gold Rathian.webp" data-resource-id="m_Gold_Rathian" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Silver Rathalos.webp" data-resource-id="m_Silver_Rathalos" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Shara Ishvalda.webp" data-resource-id="m_Shara_Ishvalda" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Ruiner Nergigante.webp" data-resource-id="m_Ruiner_Nergigante" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Stygian Zinogre.webp" data-resource-id="m_Stygian_Zinogre" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Brute Tigrex.webp" data-resource-id="m_Brute_Tigrex" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Frostfang Barioth.webp" data-resource-id="m_Frostfang_Barioth" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Kirin.webp" data-resource-id="m_Kirin" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Savage Deviljho.webp" data-resource-id="m_Savage_Deviljho" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Scarred Yian Garuga.webp" data-resource-id="m_Scarred_Yian_Garuga" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Fatalis.webp" data-resource-id="m_Fatalis" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Alatreon.webp" data-resource-id="m_Alatreon" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Kulve Taroth.webp" data-resource-id="m_Kulve_Taroth" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Velkhana.webp" data-resource-id="m_Velkhana" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Namielle.webp" data-resource-id="m_Namielle" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Raging Brachydios.webp" data-resource-id="m_Raging_Brachydios" />
+<meta name="ext-resource-dependency" content="../../assets/monsters/Nergigante.webp" data-resource-id="m_Nergigante" />
+
+<link rel="icon" type="image/svg+xml" href="../../assets/mhw-logo.svg"/>
+<link rel="stylesheet" href="../../colors_and_type.css"/>
+<link rel="stylesheet" href="kit.css"/>
+
+<template id="__bundler_thumbnail" data-bg-color="#0a1a24">
+  <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="bg" cx="50%" cy="50%" r="60%">
+        <stop offset="0%" stop-color="#0f2a33"/>
+        <stop offset="100%" stop-color="#0a1a24"/>
+      </radialGradient>
+    </defs>
+    <rect width="400" height="400" fill="url(#bg)"/>
+    <!-- Stylized crest silhouette -->
+    <g fill="#f3e0a1" opacity=".92">
+      <!-- horns -->
+      <path d="M110 140 L90 70 L140 115 L130 155 Z"/>
+      <path d="M290 140 L310 70 L260 115 L270 155 Z"/>
+      <!-- head -->
+      <path d="M140 150 Q200 130 260 150 L255 210 Q200 230 145 210 Z"/>
+      <!-- eyes -->
+      <circle cx="175" cy="180" r="6" fill="#e6c04a"/>
+      <circle cx="225" cy="180" r="6" fill="#e6c04a"/>
+      <!-- jaw spikes -->
+      <path d="M170 215 L200 260 L230 215 Z"/>
+    </g>
+    <!-- Wordmark -->
+    <text x="200" y="310" text-anchor="middle" font-family="Cinzel, serif" font-size="28" font-weight="900" fill="#f3e0a1" letter-spacing="4">QUEST BOARD</text>
+    <text x="200" y="335" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#7ea28a" letter-spacing="4">RESEARCH COMMISSION</text>
+  </svg>
+</template>
+
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+  // Build a string-keyed lookup from the bundler's hashed resource IDs back to the
+  // human-readable names the components expect. Runs once, synchronously, before React renders.
+  (function(){
+    // Wait until __resources is populated (the bundler sets it up before <script> tags run)
+    var R = window.__resources || {};
+    var w = {}, mo = {};
+    w["Great Sword"] = R["w_Great_Sword"];
+    w["Sword & Shield"] = R["w_Sword___Shield"];
+    w["Dual Blades"] = R["w_Dual_Blades"];
+    w["Long Sword"] = R["w_Long_Sword"];
+    w["Hammer"] = R["w_Hammer"];
+    w["Hunting Horn"] = R["w_Hunting_Horn"];
+    w["Lance"] = R["w_Lance"];
+    w["Gunlance"] = R["w_Gunlance"];
+    w["Switch Axe"] = R["w_Switch_Axe"];
+    w["Charge Blade"] = R["w_Charge_Blade"];
+    w["Insect Glaive"] = R["w_Insect_Glaive"];
+    w["Bow"] = R["w_Bow"];
+    w["Light Bowgun"] = R["w_Light_Bowgun"];
+    w["Heavy Bowgun"] = R["w_Heavy_Bowgun"];
+    mo["Anjanath"] = R["m_Anjanath"];
+    mo["Banbaro"] = R["m_Banbaro"];
+    mo["Barroth"] = R["m_Barroth"];
+    mo["Beotodus"] = R["m_Beotodus"];
+    mo["Coral Pukei-Pukei"] = R["m_Coral_Pukei_Pukei"];
+    mo["Diablos"] = R["m_Diablos"];
+    mo["Dodogama"] = R["m_Dodogama"];
+    mo["Great Girros"] = R["m_Great_Girros"];
+    mo["Great Jagras"] = R["m_Great_Jagras"];
+    mo["Jyuratodus"] = R["m_Jyuratodus"];
+    mo["Kulu-Ya-Ku"] = R["m_Kulu_Ya_Ku"];
+    mo["Lavasioth"] = R["m_Lavasioth"];
+    mo["Legiana"] = R["m_Legiana"];
+    mo["Nightshade Paolumu"] = R["m_Nightshade_Paolumu"];
+    mo["Odogaron"] = R["m_Odogaron"];
+    mo["Paolumu"] = R["m_Paolumu"];
+    mo["Pukei-Pukei"] = R["m_Pukei_Pukei"];
+    mo["Radobaan"] = R["m_Radobaan"];
+    mo["Rathalos"] = R["m_Rathalos"];
+    mo["Rathian"] = R["m_Rathian"];
+    mo["Tobi-Kadachi"] = R["m_Tobi_Kadachi"];
+    mo["Tzitzi-Ya-Ku"] = R["m_Tzitzi_Ya_Ku"];
+    mo["Uragaan"] = R["m_Uragaan"];
+    mo["Acidic Glavenus"] = R["m_Acidic_Glavenus"];
+    mo["Azure Rathalos"] = R["m_Azure_Rathalos"];
+    mo["Black Diablos"] = R["m_Black_Diablos"];
+    mo["Brachydios"] = R["m_Brachydios"];
+    mo["Barioth"] = R["m_Barioth"];
+    mo["Ebony Odogaron"] = R["m_Ebony_Odogaron"];
+    mo["Fulgur Anjanath"] = R["m_Fulgur_Anjanath"];
+    mo["Glavenus"] = R["m_Glavenus"];
+    mo["Nargacuga"] = R["m_Nargacuga"];
+    mo["Pink Rathian"] = R["m_Pink_Rathian"];
+    mo["Seething Bazelgeuse"] = R["m_Seething_Bazelgeuse"];
+    mo["Shrieking Legiana"] = R["m_Shrieking_Legiana"];
+    mo["Tigrex"] = R["m_Tigrex"];
+    mo["Viper Tobi-Kadachi"] = R["m_Viper_Tobi_Kadachi"];
+    mo["Yian Garuga"] = R["m_Yian_Garuga"];
+    mo["Zinogre"] = R["m_Zinogre"];
+    mo["Rajang"] = R["m_Rajang"];
+    mo["Blackveil Vaal Hazak"] = R["m_Blackveil_Vaal_Hazak"];
+    mo["Teostra"] = R["m_Teostra"];
+    mo["Lunastra"] = R["m_Lunastra"];
+    mo["Kushala Daora"] = R["m_Kushala_Daora"];
+    mo["Furious Rajang"] = R["m_Furious_Rajang"];
+    mo["Gold Rathian"] = R["m_Gold_Rathian"];
+    mo["Silver Rathalos"] = R["m_Silver_Rathalos"];
+    mo["Shara Ishvalda"] = R["m_Shara_Ishvalda"];
+    mo["Ruiner Nergigante"] = R["m_Ruiner_Nergigante"];
+    mo["Stygian Zinogre"] = R["m_Stygian_Zinogre"];
+    mo["Brute Tigrex"] = R["m_Brute_Tigrex"];
+    mo["Frostfang Barioth"] = R["m_Frostfang_Barioth"];
+    mo["Kirin"] = R["m_Kirin"];
+    mo["Savage Deviljho"] = R["m_Savage_Deviljho"];
+    mo["Scarred Yian Garuga"] = R["m_Scarred_Yian_Garuga"];
+    mo["Fatalis"] = R["m_Fatalis"];
+    mo["Alatreon"] = R["m_Alatreon"];
+    mo["Kulve Taroth"] = R["m_Kulve_Taroth"];
+    mo["Velkhana"] = R["m_Velkhana"];
+    mo["Namielle"] = R["m_Namielle"];
+    mo["Raging Brachydios"] = R["m_Raging_Brachydios"];
+    mo["Nergigante"] = R["m_Nergigante"];
+    window.__imgMap = { w: w, mo: mo };
+  })();
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="data.js"></script>
+<script type="text/babel" src="components.standalone.jsx"></script>
+<script type="text/babel" src="QuestGenerator.standalone.jsx"></script>
+<script type="text/babel">
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(<QuestGenerator/>);
+</script>
+</body>
+</html>

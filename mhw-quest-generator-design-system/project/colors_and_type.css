@@ -1,0 +1,242 @@
+/* ==========================================================================
+   MHW QUEST GENERATOR — COLOR & TYPE FOUNDATIONS
+   Inspired by Capcom's Monster Hunter: World UI (quest board, heraldic crest).
+   ========================================================================== */
+
+/* -------- FONTS --------
+   Original app used browser-default sans (no declared family).
+   For the elevated "quest-board" aesthetic we substitute:
+     • "Cinzel"      → ceremonial engraved display (research commission titles)
+     • "Marcellus"   → serif body (parchment readability)
+     • "Inter"       → neutral UI sans (menus, labels, counters)
+     • "JetBrains Mono" → mono (IDs, stats)
+   All four are Google Fonts — swap with Capcom's proprietary faces if licensed.
+   ---------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Marcellus&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  /* ============ PALETTE — CORE ============ */
+  /* Deep night-purple: dominant background from the in-game guild hall */
+  --ink-900: #0b0712;          /* near-black, used for overlays */
+  --ink-800: #140d1f;          /* page bg base */
+  --ink-700: #1e1430;          /* elevated surface */
+  --ink-600: #2a1f42;          /* raised card */
+  --ink-500: #3b2d57;          /* border divider */
+
+  /* Parchment — quest-scroll surfaces */
+  --parch-100: #f4e8cf;        /* brightest paper */
+  --parch-200: #e8d7ad;        /* default paper */
+  --parch-300: #d5bf86;        /* paper shadow */
+  --parch-400: #a78b54;        /* aged edge */
+  --parch-500: #6b5432;        /* burnt edge */
+
+  /* Metallic — heraldic crest / frames */
+  --gold-100: #f3e0a1;
+  --gold-300: #d9b24e;
+  --gold-500: #a37920;
+  --silver-200: #d6d4ce;
+  --silver-400: #8a8880;
+  --silver-600: #4a4843;
+
+  /* ============ PALETTE — ACCENTS ============ */
+  /* The signature emerald glow (Research Commission seal) */
+  --emerald-300: #a6ffb0;
+  --emerald-400: #5bff7d;
+  --emerald-500: #21c94a;      /* primary glow */
+  --emerald-700: #0c6d23;
+
+  /* Danger / elder dragon red (used by Clear History, Fatalis) */
+  --crimson-300: #ff9b8a;
+  --crimson-500: #e0473a;
+  --crimson-700: #8a1c13;
+
+  /* Monster-type accents (from in-game category colors) */
+  --tier-low:     #6fae55;     /* low-rank: green */
+  --tier-mid:     #d6a03b;     /* high-rank: amber */
+  --tier-high:    #c95230;     /* master-rank: ember */
+  --tier-super:   #7e5bff;     /* arch-tempered: violet */
+
+  /* ============ SEMANTIC ============ */
+  --bg:            var(--ink-800);
+  --bg-elev:       var(--ink-700);
+  --bg-raised:     var(--ink-600);
+  --bg-parchment:  var(--parch-200);
+  --surface-crest: #08050f;
+
+  --fg:            var(--parch-100);
+  --fg-muted:      #c7b68d;
+  --fg-subtle:     #8a7a56;
+  --fg-ink:        #2a1e0a;   /* text ON parchment */
+  --fg-ink-muted:  #6b5432;
+  --fg-inverse:    var(--ink-900);
+
+  --border:        rgba(217,178,78,0.35);   /* gold hairline */
+  --border-strong: var(--gold-500);
+  --border-paper:  rgba(107,84,50,0.45);
+  --divider:       rgba(244,232,207,0.12);
+
+  --accent:        var(--emerald-500);
+  --accent-glow:   0 0 24px rgba(91,255,125,0.55), 0 0 4px rgba(166,255,176,0.9);
+  --danger:        var(--crimson-500);
+  --success:       var(--emerald-500);
+
+  /* ============ TYPE SCALE ============ */
+  --font-display: 'Cinzel', 'Trajan Pro', serif;
+  --font-serif:   'Marcellus', 'Cormorant Garamond', Georgia, serif;
+  --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 15px;
+  --text-md:   17px;
+  --text-lg:   20px;
+  --text-xl:   26px;
+  --text-2xl:  34px;
+  --text-3xl:  44px;
+  --text-4xl:  58px;
+  --text-5xl:  78px;
+
+  --lh-tight:   1.08;
+  --lh-snug:    1.2;
+  --lh-normal:  1.45;
+  --lh-loose:   1.65;
+
+  --track-tight:   -0.01em;
+  --track-normal:  0;
+  --track-wide:    0.08em;
+  --track-wider:   0.16em;
+  --track-widest:  0.28em;
+
+  /* ============ SHAPE / SPACING ============ */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 16px;
+  --radius-pill: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ============ ELEVATION ============ */
+  --shadow-sm:    0 1px 2px rgba(0,0,0,.45);
+  --shadow-md:    0 6px 18px rgba(0,0,0,.55);
+  --shadow-lg:    0 18px 48px rgba(0,0,0,.65);
+  --shadow-inset: inset 0 1px 0 rgba(243,224,161,0.14), inset 0 -1px 0 rgba(0,0,0,0.5);
+
+  --glow-emerald: 0 0 0 1px rgba(91,255,125,0.35), 0 0 24px rgba(91,255,125,0.35);
+  --glow-gold:    0 0 0 1px rgba(217,178,78,0.45), 0 0 18px rgba(217,178,78,0.25);
+  --glow-danger:  0 0 0 1px rgba(224,71,58,0.5),  0 0 24px rgba(224,71,58,0.45);
+
+  /* Scroll / parchment corner-cut shape (used for quest cards) */
+  --cut-corner: polygon(
+    0 14px, 14px 0,
+    calc(100% - 14px) 0, 100% 14px,
+    100% calc(100% - 14px), calc(100% - 14px) 100%,
+    14px 100%, 0 calc(100% - 14px)
+  );
+
+  /* ============ MOTION ============ */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:     cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast:    120ms;
+  --dur-med:     260ms;
+  --dur-slow:    480ms;
+}
+
+/* ============ SEMANTIC TEXT STYLES ============ */
+html, body { background: var(--bg); color: var(--fg); font-family: var(--font-sans); font-size: var(--text-base); line-height: var(--lh-normal); }
+
+.h1, h1 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: var(--text-4xl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--track-wider);
+  text-transform: uppercase;
+  color: var(--gold-100);
+  text-shadow: 0 2px 0 rgba(0,0,0,.5), 0 0 24px rgba(217,178,78,.2);
+}
+.h2, h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  line-height: var(--lh-snug);
+  color: var(--gold-100);
+}
+.h3, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-lg);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  line-height: var(--lh-snug);
+  color: var(--parch-200);
+}
+.eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-widest);
+  text-transform: uppercase;
+  color: var(--emerald-400);
+}
+.quest-title {
+  /* For items printed on parchment */
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  line-height: var(--lh-snug);
+  color: var(--fg-ink);
+}
+.body, p {
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  line-height: var(--lh-loose);
+  color: var(--fg);
+}
+.ui-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.stat, code, .mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: var(--track-normal);
+  color: var(--emerald-300);
+}
+.caption {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--fg-subtle);
+  letter-spacing: var(--track-wide);
+}
+
+/* ============ REUSABLE PRIMITIVES ============ */
+.crest-divider {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--gold-300); opacity: .65;
+}
+.crest-divider::before, .crest-divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-500), transparent);
+}
+
+.grain::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2' seed='4'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/></svg>");
+  mix-blend-mode: overlay; opacity: .35;
+}

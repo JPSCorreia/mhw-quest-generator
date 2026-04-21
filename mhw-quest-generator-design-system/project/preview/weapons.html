@@ -1,0 +1,21 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Weapon Icons</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body{margin:0;padding:20px;background:var(--ink-800);font-family:var(--font-sans)}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+  .cell{aspect-ratio:1;background:var(--ink-700);border:1px solid var(--gold-500);display:flex;align-items:center;justify-content:center;position:relative;clip-path:polygon(0 6px,6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px))}
+  .cell img{width:55%;height:55%;object-fit:contain;filter:invert(1) drop-shadow(0 0 6px rgba(243,224,161,.2))}
+  .cell.active{border-color:var(--emerald-400);box-shadow:0 0 10px rgba(91,255,125,.4)}
+  .name{position:absolute;bottom:4px;left:0;right:0;color:var(--parch-200);font-size:8px;letter-spacing:.1em;text-transform:uppercase;text-align:center;font-family:var(--font-display);font-weight:600}
+</style></head><body>
+<div class="grid">
+  <div class="cell active"><img src="../assets/weapons/Great Sword.png"><div class="name">GS</div></div>
+  <div class="cell"><img src="../assets/weapons/Dual Blades.png"><div class="name">DB</div></div>
+  <div class="cell"><img src="../assets/weapons/Hammer.png"><div class="name">Hammer</div></div>
+  <div class="cell"><img src="../assets/weapons/Bow.png"><div class="name">Bow</div></div>
+  <div class="cell"><img src="../assets/weapons/Long Sword.png"><div class="name">LS</div></div>
+  <div class="cell"><img src="../assets/weapons/Charge Blade.png"><div class="name">CB</div></div>
+  <div class="cell"><img src="../assets/weapons/Gunlance.png"><div class="name">GL</div></div>
+</div>
+</body></html>
