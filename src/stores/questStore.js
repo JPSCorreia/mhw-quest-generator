@@ -3,6 +3,8 @@ import { makeAutoObservable } from "mobx";
 class QuestStore {
   weapon = '';
   monster = '';
+  temper = 'normal';
+  quest = null;
   includeNormalMonsters = true;
   includeMidTierMonsters = true;
   includeEndgameMonsters = true;
@@ -11,6 +13,19 @@ class QuestStore {
   preventRepeatMonster = false;
 
   reduceBowgunFrequency = false;
+
+  useQuestMode = false;
+  includeCaptureQuests = true;
+  selectedQuestKinds = {
+    Optional: true,
+    Event: true,
+    Arena: true,
+  };
+  selectedRanks = {
+    Low: false,
+    High: false,
+    Master: true,
+  };
 
   selectedWeapons = {
     'Great Sword': true,
@@ -38,6 +53,21 @@ class QuestStore {
     'Raging Brachydios': true,
   };
 
+  selectedBaseSpecialMonsters = {
+    'Arch-Tempered Nergigante': true,
+    'Arch-Tempered Kirin': true,
+    'Arch-Tempered Teostra': true,
+    'Arch-Tempered Lunastra': true,
+    'Arch-Tempered Vaal Hazak': true,
+    'Arch-Tempered Kushala Daora': true,
+    "Arch-Tempered Xeno'jiiva": true,
+    'Arch-Tempered Kulve Taroth': true,
+    'Leshen': true,
+    'Ancient Leshen': true,
+    'Behemoth': true,
+    'Extreme Behemoth': true,
+  };
+
   questHistory = [];
 
   constructor() {
@@ -58,6 +88,16 @@ class QuestStore {
 
   setMonster(monster) {
     this.monster = monster;
+    this.persistState();
+  }
+
+  setTemper(temper) {
+    this.temper = temper;
+    this.persistState();
+  }
+
+  toggleRank(rank) {
+    this.selectedRanks[rank] = !this.selectedRanks[rank];
     this.persistState();
   }
 
@@ -91,6 +131,11 @@ class QuestStore {
     this.persistState();
   }
 
+  toggleBaseSpecialMonster(monster) {
+    this.selectedBaseSpecialMonsters[monster] = !this.selectedBaseSpecialMonsters[monster];
+    this.persistState();
+  }
+
   toggleWeaponSelection(weapon) {
     this.selectedWeapons[weapon] = !this.selectedWeapons[weapon];
     this.persistState();
@@ -101,8 +146,31 @@ class QuestStore {
     this.persistState();
   }
 
-  addQuestToHistory(weapon, monster) {
-    this.questHistory = [{ id: Date.now(), weapon, monster }, ...this.questHistory].slice(0, 99);
+  setUseQuestMode(value) {
+    this.useQuestMode = value;
+    this.persistState();
+  }
+
+  setIncludeCaptureQuests(value) {
+    this.includeCaptureQuests = value;
+    this.persistState();
+  }
+
+  toggleQuestKind(kind) {
+    this.selectedQuestKinds[kind] = !this.selectedQuestKinds[kind];
+    this.persistState();
+  }
+
+  setQuest(quest) {
+    this.quest = quest;
+    this.persistState();
+  }
+
+  addQuestToHistory(weapon, monster, quest = null, temper = 'normal') {
+    this.questHistory = [
+      { id: Date.now(), weapon, monster, quest, temper },
+      ...this.questHistory,
+    ].slice(0, 99);
     this.persistState();
   }
 
@@ -112,9 +180,10 @@ class QuestStore {
   }
 
   clearQuestHistory() {
-    // Limpar a quest atual e o histórico
     this.weapon = '';
     this.monster = '';
+    this.temper = 'normal';
+    this.quest = null;
     this.questHistory = [];
     this.persistState();
   }
@@ -124,14 +193,21 @@ class QuestStore {
     const state = {
       weapon: this.weapon,
       monster: this.monster,
+      temper: this.temper,
+      quest: this.quest,
       includeNormalMonsters: this.includeNormalMonsters,
       includeMidTierMonsters: this.includeMidTierMonsters,
       includeEndgameMonsters: this.includeEndgameMonsters,
       selectedSuperEndgameMonsters: this.selectedSuperEndgameMonsters,
+      selectedBaseSpecialMonsters: this.selectedBaseSpecialMonsters,
       selectedWeapons: this.selectedWeapons,
       preventRepeatWeapon: this.preventRepeatWeapon,
       preventRepeatMonster: this.preventRepeatMonster,
       reduceBowgunFrequency: this.reduceBowgunFrequency,
+      useQuestMode: this.useQuestMode,
+      includeCaptureQuests: this.includeCaptureQuests,
+      selectedQuestKinds: this.selectedQuestKinds,
+      selectedRanks: this.selectedRanks,
       questHistory: this.questHistory,
     };
     localStorage.setItem('questState', JSON.stringify(state));

@@ -1,7 +1,10 @@
 import { WEAPONS } from '../lib/data';
-import { WeaponChip } from './primitives';
+import { WeaponChip, Check } from './primitives';
 
-export default function Armory({ selected, onToggle }) {
+export default function Armory({
+  selected, onToggle,
+  reduceBowgun, noRepeatW, onFlag,
+}) {
   const count = WEAPONS.filter((w) => selected[w]).length;
   return (
     <section className="qg-panel">
@@ -18,6 +21,9 @@ export default function Armory({ selected, onToggle }) {
             <WeaponChip key={w} name={w} on={!!selected[w]} onToggle={() => onToggle(w)} />
           ))}
         </div>
+        <div className="qg-section-head" style={{ marginTop: 14 }}>Armory terms</div>
+        <Check label="Reduce Bowgun Frequency" checked={reduceBowgun} onChange={(v) => onFlag('reduceBowgun', v)} />
+        <Check label="Prevent Weapon Repeat"   checked={noRepeatW}    onChange={(v) => onFlag('noRepeatW', v)} />
       </div>
     </section>
   );

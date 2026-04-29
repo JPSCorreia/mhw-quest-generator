@@ -13,5 +13,13 @@ function toMap(mod) {
 export const MONSTER_ICONS = toMap(monsterImages);
 export const WEAPON_ICONS  = toMap(weaponImages);
 
-export function monsterIcon(name) { return name ? MONSTER_ICONS[name] : null; }
+export function monsterIcon(name) {
+  if (!name) return null;
+  if (MONSTER_ICONS[name]) return MONSTER_ICONS[name];
+  if (name.startsWith('Arch-Tempered ')) return MONSTER_ICONS[name.slice('Arch-Tempered '.length)] || null;
+  if (name === 'Extreme Behemoth') return MONSTER_ICONS['Behemoth'] || null;
+  return null;
+}
 export function weaponIcon(name)  { return name ? WEAPON_ICONS[name]  : null; }
+
+export const trapIcon = MONSTER_ICONS['trap'];
